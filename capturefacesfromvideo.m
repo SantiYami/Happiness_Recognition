@@ -5,13 +5,13 @@ clc
 % Crear el objeto detector de cara.
 faceDetector = vision.CascadeObjectDetector('FrontalFaceCART','MinSize',[150,150]);
 
-% Aquí el ciclo se ejecuta 50 veces, puede cambiar el umbral (n) en función de la cantidad de datos de entrenamiento que necesita
-n = 400;
+% Aquí el ciclo se ejecuta n veces, puede cambiar el umbral (n) en función de la cantidad de datos de entrenamiento que necesita
+n = 20;
 
 % cambie str a s01, s02, s03, .... para guardar hasta cuántos temas desea guardar para guardar en las carpetas respectivas para
 % imwrite en la línea 88
 
-str = 's02';
+str = 's01';
 
 % Crear el objeto rastreador de puntos.
 pointTracker = vision.PointTracker('MaxBidirectionalError', 2);
@@ -91,7 +91,8 @@ while runLoop && frameCount < n
             % Convertir las esquinas de la caja en [x1 y1 x2 y2 x3 y3 x4 y4]
             % formato requerido por insertShape.
             bboxPolygon = reshape(bboxPoints', 1, []);
-            imwrite(videoFrame,[ 'D:\Documentos\David\U.DISTRITAL\Semestres\Semestre10\Teleinformatica\Happiness_Recognition\photos\',str,'\',int2str(i), '.jpg']);
+            mkdir('photos',str);
+            imwrite(videoFrame,fullfile('photos',str,[int2str(i), '.jpg']));
             % Muestra un cuadro delimitador alrededor de la cara que se está rastreando.
             videoFrame = insertShape(videoFrame, 'Polygon', bboxPolygon, 'LineWidth', 3);
 

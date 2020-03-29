@@ -99,7 +99,7 @@ acc = sum(pred)/s(1);
 fprintf('La precisión del conjunto de prueba es %f %% \n',acc*100);
 
 %% Probar la base de datos con una imagen
-img = imread('D:\Documentos\David\U.DISTRITAL\Semestres\Semestre10\Teleinformatica\Happiness_Recognition\11.jpg');
+img = imread('11.jpg');
 [img,face] = cropface(img);
 % El valor de face sera 1 si detecta una cara, en caso contrario sera 0
 if face == 1

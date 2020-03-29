@@ -6,7 +6,8 @@ for i = 1:n
     i1 = readimage(im,i);
     [img,face] = cropface(i1);
     if face==1
-        imwrite(img,['D:\Documentos\David\U.DISTRITAL\Semestres\Semestre10\Teleinformatica\Happiness_Recognition\croppedfaces\', str,'\',int2str(j), '.jpg']);
+        mkdir('croppedfaces',str);
+        imwrite(img,fullfile('croppedfaces',str,[int2str(i), '.jpg']));
         j = j+1;
     end
 end
