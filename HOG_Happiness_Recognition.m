@@ -93,17 +93,17 @@ opts = trainingOptions("rmsprop","InitialLearnRate",learning_rate,...
     extractHOGFeatures(readimage(database,personToQuery));
 cellSize = visualization.CellSize; 
 hogFeatureSize = length(hogFeature);
-numImages = numel(Training.Files);
+numImages = numel(Test.Files);
 trainingFeatures = zeros(numImages, hogFeatureSize, 'single');
 for i = 1:numImages
-    img = readimage(Training, i);
+    img = readimage(Test, i);
     img = rgb2gray(img);
     % Aplicar pasos de pre-procesamiento
     img = imbinarize(img);
     trainingFeatures(i, :) = extractHOGFeatures(img, 'CellSize', cellSize);  
 end
 % Obtener etiquetas para cada imagen
-trainingLabels = Training.Labels;
+trainingLabels = Test.Labels;
 
 %% Se clasifican los datos de prueba con la red entrenada
 [predict,scores] = classify(newnet,Test);
