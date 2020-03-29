@@ -11,7 +11,7 @@ faceDetector = vision.CascadeObjectDetector('FrontalFaceCART','MinSize',...
 
 %% Aquí n la cantidad de veces que se ejecuta el ciclo, se puede cambiar
 % el umbral (n) en función de la cantidad de datos que se necesite
-n = 20;
+n = 400;
 
 %% Cambie str a s01, s02, s03, .... para guardar hasta cuántos individuos
 % desee guardar en las carpetas respectivas con la función imwrite en 

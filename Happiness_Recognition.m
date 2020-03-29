@@ -59,12 +59,24 @@ opts = trainingOptions("rmsprop","InitialLearnRate",learning_rate,...
     'MaxEpochs',20,'MiniBatchSize',64,'Plots','training-progress');
 [newnet,info] = trainNetwork(Training, ly, opts);
 
-%% Se mide la precisión de la red entrenada con los datos de prueba
+%% Se clasifican los datos de prueba con la red entrenada
 [predict,scores] = classify(newnet,Test);
+
+%% Se mide la precisión de la red entrenada con los datos de prueba
+
+% Se toma las etiquetas del conjunto de pruebas y se guardan en names
 names = Test.Labels;
+
+% Se guardan en pred las coincidencias entre las etiquetas del conjunto de
+% prueba y las que arrojo la red neuronal.
 pred = (predict==names);
+
+% Se hace el calculo del porcentaje de precisión sumando la cantidad de
+% aciertos y dividiendolo entre la cantidad de datos (Imagenes)
 s = size(pred);
 acc = sum(pred)/s(1);
+
+% Se imprime en pantalla el porcentaje de precisión
 fprintf('La precisión del conjunto de prueba es %f %% \n',acc*100);
 
 %% Probar la red neuronal con una imagen
