@@ -94,13 +94,13 @@ opts = trainingOptions("rmsprop","InitialLearnRate",learning_rate,...
 cellSize = visualization.CellSize; 
 hogFeatureSize = length(hogFeature);
 numImages = numel(Test.Files);
-trainingFeatures = zeros(numImages, hogFeatureSize, 'single');
+testFeatures = zeros(numImages, hogFeatureSize, 'single');
 for i = 1:numImages
     img = readimage(Test, i);
     img = rgb2gray(img);
     % Aplicar pasos de pre-procesamiento
     img = imbinarize(img);
-    trainingFeatures(i, :) = extractHOGFeatures(img, 'CellSize', cellSize);  
+    testFeatures(i, :) = extractHOGFeatures(img, 'CellSize', cellSize);  
 end
 % Obtener etiquetas para cada imagen
 trainingLabels = Test.Labels;
