@@ -31,7 +31,8 @@ title('Todo el database');
 %% Se cambia el tamaño de las imagenes al tamaño de entrada de la red
 database.ReadFcn = @(loc)imresize(imread(loc),[227,227]);
 
-%% Se parte la base de datos en sección de entrenamiento y test en una relación de 80 a 20
+%% Se parte la base de datos en sección de entrenamiento y test en una
+% relación de 80 a 20
 [Training ,Test] = splitEachLabel(database,0.8,'randomized');
 
 %% Se copia las capas de Alexnet y se modifican las capas 23 y 25 
@@ -66,21 +67,32 @@ s = size(pred);
 acc = sum(pred)/s(1);
 fprintf('La precisión del conjunto de prueba es %f %% \n',acc*100);
 
-%% Probar la base de datos con una imagen
+%% Probar la red neuronal con una imagen
 img = imread('15.jpg');%Cambiar por la imagen a probar
 [img,face] = cropface(img);
+
 % El valor de face sera 1 si detecta una cara, en caso contrario sera 0
 if face == 1
+    %% Se cambia el tamaño de las imagenes al tamaño de entrada de la red.
     img = imresize(img,[227 227]);
-    predict = classify(newnet,img)
+    
+    %% Se introduce la imagen a la red neuronal para ser analizada.
+    predictFace = classify(newnet,img);
+    
+    %% Mensaje que saldra al detectar un rostro
+    nameOfEmotion01 = 'Rostro neutral';
+    nameOfEmotion02 = 'Rostro feliz';
+
+    %% Se comprueba que tipo de emoción es la encontrada y saca un mensaje
+    % en consola del tipo de cara detectada.
+    if predict=='neutral'
+        fprintf('The face detected is %s',nameOfEmotion01);
+    elseif  predict=='happy'
+        fprintf('The face detected is %s',nameOfEmotion02);
+    end
+    
 end
-nameofs01 = 'Rostro neutral';
-nameofs02 = 'Rostro feliz';
-if predict=='neutral'
-    fprintf('The face detected is %s',nameofs01);
-elseif  predict=='happy'
-    fprintf('The face detected is %s',nameofs02);
-end
+
 %%
 % podemos usar [predict,score] = classify(newnet,img) aquí puntaje dice el
 % porcentaje que cuán confianza es

@@ -28,9 +28,10 @@ title('Imágen de una cara neutral');
 subplot(2,2,[2 4]);montage(database);
 title('Todo el database');
 
-%% Se extrae y muestra las características del histograma de gradientes orientados(HOG) para una sola cara
+%% Se extrae y muestra en pantalla las características del histograma de
+% gradientes orientados(HOG) para una sola cara
 personToQuery = 11;
-[hogFeature, visualization]= ...
+[~, visualization]= ...
     extractHOGFeatures(readimage(database,personToQuery));
 figure;
 subplot(1,2,1);imshow(readimage(database,personToQuery));
@@ -41,7 +42,8 @@ hold on;plot(visualization);title('Descriptor de características HOG');
 %% Se cambia el tamaño de las imagenes al tamaño de entrada de la red
 database.ReadFcn = @(loc)imresize(imread(loc),[227,227]);
 
-%% Se parte la base de datos en sección de entrenamiento y test en una rel%ación de 80 a 20
+%% Se parte la base de datos en sección de entrenamiento y test en una
+% relación de 80 a 20
 [Training ,Test] = splitEachLabel(database,0.8,'randomized');
 
 %% Extraer características de HOG para el conjunto de entrenamiento
@@ -54,11 +56,11 @@ trainingFeatures = zeros(numImages, hogFeatureSize, 'single');
 for i = 1:numImages
     img = readimage(Training, i);
     img = rgb2gray(img);
-    % Apply pre-processing steps
+    % Aplicar pasos de pre-procesamiento
     img = imbinarize(img);
     trainingFeatures(i, :) = extractHOGFeatures(img, 'CellSize', cellSize);  
 end
-% Get labels for each image.
+% Obtener etiquetas para cada imagen
 trainingLabels = Training.Labels;
 
 %% Se copia las capas de Alexnet y se modifican las capas 23 y 25 
@@ -72,10 +74,6 @@ ly = net.Layers;
 ly(23) = fc;
 cl = classificationLayer;
 ly(25) = cl;
-
-%
-%dt = datastore(trainingFeatures,'IncludeSubfolders',true,...
-%    'LabelSource',trainingLabels);
 
 %% Se configuran las opciones para entrenar la red como:
 % La tasa de aprendizaje, la cantidad de epocas de entrenamiento y minimo
@@ -91,6 +89,7 @@ opts = trainingOptions("rmsprop","InitialLearnRate",learning_rate,...
 [newnet,info] = trainNetwork(Training, ly, opts);
 
 %% Se mide la precisión de la red entrenada con los datos de prueba
+% y se configura 
 [predict,scores] = classify(newnet,Test);
 names = Test.Labels;
 pred = (predict==names);
@@ -98,21 +97,45 @@ s = size(pred);
 acc = sum(pred)/s(1);
 fprintf('La precisión del conjunto de prueba es %f %% \n',acc*100);
 
-%% Probar la base de datos con una imagen
-img = imread('11.jpg');
+%% Probar la red neuronal con una imagen
+img = imread('15.jpg');%Cambiar por la imagen a probar
 [img,face] = cropface(img);
+
 % El valor de face sera 1 si detecta una cara, en caso contrario sera 0
 if face == 1
+    %% Se extrae las características del histograma de gradientes
+    % orientados(HOG) para una sola cara
+    [hogFeature, visualization]= ...
+    extractHOGFeatures(img);
+
+    %% Se muestra en pantalla la cara detectada y el histograma de
+    % gradientes orientados (HOG)
+    figure;
+    subplot(1,2,1);imshow(img);
+    title('Cara de entrada');
+    subplot(1,2,2);imshow(img);
+    hold on;plot(visualization);title('Descriptor de características HOG');
+    
+    %% Se cambia el tamaño de las imagenes al tamaño de entrada de la red.
     img = imresize(img,[227 227]);
-    predict = classify(newnet,img)
+    
+    %% Se introduce la imagen a la red neuronal para ser analizada.
+    predictFace = classify(newnet,img);
+    
+    %% Mensaje que saldra al detectar un rostro
+    nameOfEmotion01 = 'Rostro neutral';
+    nameOfEmotion02 = 'Rostro feliz';
+
+    %% Se comprueba que tipo de emoción es la encontrada y saca un mensaje
+    % en consola del tipo de cara detectada.
+    if predictFace=='neutral'
+        fprintf('The face detected is %s',nameOfEmotion01);
+    elseif  predictFace=='happy'
+        fprintf('The face detected is %s',nameOfEmotion02);
+    end
+    
 end
-nameofs01 = 'Rostro neutral';
-nameofs02 = 'Rostro feliz';
-if predict=='neutral'
-    fprintf('The face detected is %s',nameofs01);
-elseif  predict=='happy'
-    fprintf('The face detected is %s',nameofs02);
-end
+
 %%
 % podemos usar [predict,score] = classify(newnet,img) aquí puntaje dice el
 % porcentaje que cuán confianza es
