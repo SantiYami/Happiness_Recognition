@@ -5,3 +5,5 @@
  <li>Jhonathan Rojas - 20151020041</li>
  <li>Julián González - 20151020046</li>
  </ul>
+ La base de datos utilizada es la FEI Face Database.
+ La cual se encuentra disponible en: https://fei.edu.br/~cet/facedatabase.html
